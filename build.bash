@@ -1,1 +1,1 @@
-g++ -o Weones main.cpp simulation.cpp weon.cpp neuralnetwork.cpp -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 && ./Weones
+g++ -o Weones src/*.cpp -Ilib/ && ./Weones

@@ -5,23 +5,32 @@ Simulation::Simulation() {
     camera.zoom = 1.0f;
     simulationWidth = 12000;
     simulationHeight = 8000;
-    testWeon = Weon();
-    testWeon.simulationWidth = simulationWidth;
-    testWeon.simulationHeight = simulationHeight;
+    std::uniform_real_distribution<double> unif(0, 2 * PI);
+    std::default_random_engine re;
+    for(int i = 0; i < 100; i++) {
+        Weon newWeon = Weon();
+        newWeon.position.x = rand() % (int)simulationWidth - (int)simulationWidth/2;
+        newWeon.position.y = rand() % (int)simulationHeight - (int)simulationHeight/2;
+        newWeon.Rotate(unif(re));
+        newWeon.simulationWidth = simulationWidth;
+        newWeon.simulationHeight = simulationHeight;
+        weones.push_back(newWeon);
+    }
 }
 
 void Simulation::Draw() {
     DrawCircleGradient(0, 0, simulationWidth/2, {0, 255, 0, 10}, {0, 20, 13, 30});
     DrawRectangleLinesEx({-simulationWidth/2, -simulationHeight/2, simulationWidth, simulationHeight}, 10, WHITE);
-    testWeon.Draw();
+    for (int i = 0; i < weones.size(); i++) {
+        weones[i].Draw();
+    }
 }
 
 void Simulation::Update() {
     HandleInput();
-    // testWeon.Forward();
-    // testWeon.Rotate(0.01);
-    testWeon.Update();
-    
+    for (int i = 0; i < weones.size(); i++) {
+        weones[i].Update();
+    }
 }
 
 void Simulation::HandleInput() {

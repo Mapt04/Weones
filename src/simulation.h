@@ -1,8 +1,9 @@
 #pragma once
-#include <raylib.h>
-#include <raymath.h>
+#include "raylib.h"
+#include "raymath.h"
 #include <iostream>
 #include "weon.h"
+#include "random"
 
 class Simulation {
     public:
@@ -10,7 +11,7 @@ class Simulation {
         void Draw();
         void Update();
         Camera2D camera;
-        Weon testWeon;
+        std::vector<Weon> weones;
 
     private:
         void HandleInput();

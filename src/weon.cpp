@@ -1,7 +1,7 @@
 #include "weon.h"
 #include <iostream>
 
-Weon::Weon() {
+Weon::Weon() : brain(2, 5, 4){
     position = (Vector2){0, 0};
     size = 10.0f;
     rotation = 0.0f;
@@ -10,7 +10,10 @@ Weon::Weon() {
         points[i] = Vector2Scale(points[i], size);
     }
     speed = 5.0f;
-    std::cout << std::endl;
+    brain.CreateNewNode();
+    vel.x = 0;
+    vel.y = 0;
+    // brain.CreateNewConnection();
 }
 
 void Weon::Draw() {
@@ -80,3 +83,9 @@ void Weon::CheckBounds() {
         }
     }
 }
+
+void Weon::Resize(float newSize) {
+        for (int i = 0; i < points.size(); i++) {
+            points[i] = Vector2Scale(points[i], size);
+        }
+    }

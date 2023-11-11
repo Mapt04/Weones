@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 #include <vector>
-
-typedef std::vector<Node> Layer;
+#include <random>
 
 struct Node {
+    int id;
     double value;
 };
 
@@ -15,11 +15,15 @@ struct Connection {
     bool enabled;
 };
 
+typedef std::vector<Node> Layer;
+
 class NeuralNetwork {
 public:
     NeuralNetwork(int numInputs, int numOutputs, int hiddenLayers);
     std::vector<double> ComputeOutput(const std::vector<double>& input);
     void CreateNewNode();
+    void CreateNewConnection();
+    void Display();
 
     std::vector<Layer> neuronLayers;
     std::vector<Connection> connections;

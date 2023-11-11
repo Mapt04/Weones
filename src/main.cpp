@@ -1,5 +1,5 @@
-#include <raylib.h>
-#include <raymath.h>
+#include "raylib.h"
+#include "raymath.h"
 #include <iostream>
 #include "simulation.h"
 
@@ -14,33 +14,38 @@ int main() {
 
         //Update
         if(IsKeyDown(KEY_Q)) {
-            simulation.testWeon.RotateLeft();
+            std::cout << "Q" << std::endl;
+            for (int i = 0; i < simulation.weones.size(); i++) {
+                simulation.weones[i].RotateLeft();
+            }
+            
         }
+
         if(IsKeyDown(KEY_E)) {
-            simulation.testWeon.RotateRight();
+            for (int i = 0; i < simulation.weones.size(); i++) {
+                simulation.weones[i].RotateRight();
+            }
         }
 
         if(IsKeyDown(KEY_W)) {
-            simulation.testWeon.Forward();
+            for (int i = 0; i < simulation.weones.size(); i++) {
+                simulation.weones[i].Forward();
+            }
         }
         simulation.Update();
-        
+
+
         //Draw
 
         BeginDrawing();
         ClearBackground({0, 20, 13, 255});
         BeginMode2D(simulation.camera);
 
-
-
         simulation.Draw();
-
 
         EndMode2D();
         
         DrawText(TextFormat("CURRENT FPS: %i", int(round((1.0f/GetFrameTime())))), GetScreenWidth() - 220, 40, 20, GREEN);
-        DrawText(TextFormat("ROTATION: %i", int(round((simulation.testWeon.rotation)))), GetScreenWidth() - 220, 100, 20, GREEN);
-
         EndDrawing();
 
         
