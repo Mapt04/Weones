@@ -10,6 +10,7 @@ class Simulation {
         Simulation();
         void Draw();
         void Update();
+        void CreateWeones(int n);
         Camera2D camera;
         std::vector<Weon> weones;
 

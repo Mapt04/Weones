@@ -5,17 +5,7 @@ Simulation::Simulation() {
     camera.zoom = 1.0f;
     simulationWidth = 12000;
     simulationHeight = 8000;
-    std::uniform_real_distribution<double> unif(0, 2 * PI);
-    std::default_random_engine re;
-    for(int i = 0; i < 100; i++) {
-        Weon newWeon = Weon();
-        newWeon.position.x = rand() % (int)simulationWidth - (int)simulationWidth/2;
-        newWeon.position.y = rand() % (int)simulationHeight - (int)simulationHeight/2;
-        newWeon.Rotate(unif(re));
-        newWeon.simulationWidth = simulationWidth;
-        newWeon.simulationHeight = simulationHeight;
-        weones.push_back(newWeon);
-    }
+    CreateWeones(100);
 }
 
 void Simulation::Draw() {
@@ -30,6 +20,21 @@ void Simulation::Update() {
     HandleInput();
     for (int i = 0; i < weones.size(); i++) {
         weones[i].Update();
+    }
+}
+
+void Simulation::CreateWeones(int n) {
+    std::uniform_real_distribution<double> unif(0, 2 * PI);
+    std::default_random_engine re;
+
+    for(int i = 0; i < n; i++) {
+        Weon newWeon = Weon();
+        newWeon.position.x = rand() % (int)simulationWidth - (int)simulationWidth/2;
+        newWeon.position.y = rand() % (int)simulationHeight - (int)simulationHeight/2;
+        newWeon.Rotate(unif(re));
+        newWeon.simulationWidth = simulationWidth;
+        newWeon.simulationHeight = simulationHeight;
+        weones.push_back(newWeon);
     }
 }
 
