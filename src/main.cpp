@@ -14,7 +14,6 @@ int main() {
 
         //Update
         if(IsKeyDown(KEY_Q)) {
-            std::cout << "Q" << std::endl;
             for (int i = 0; i < simulation.weones.size(); i++) {
                 simulation.weones[i].RotateLeft();
             }
