@@ -1,18 +1,19 @@
 #include "simulation.h"
 
-Simulation::Simulation() {
+Simulation::Simulation(){
     camera = {{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, {0, 0}};
     camera.zoom = 1.0f;
     simulationWidth = 15000;
     simulationHeight =  10000;
-    CreateWeones(50);
-    CreatePellets(30);
+    CreateWeones(1);
+    CreatePellets(70);
 }
 
 void Simulation::Draw() {
     DrawCircleGradient(0, 0, simulationWidth/2, {0, 255, 0, 10}, {0, 20, 13, 30});
     DrawRectangleLinesEx({-simulationWidth/2, -simulationHeight/2, simulationWidth, simulationHeight}, 10, WHITE);
     DrawPellets();
+    DrawEggs();
     DrawWeones();
 }
 
@@ -32,12 +33,37 @@ void Simulation::DrawPellets() {
     }
 }
 
+void Simulation::DrawEggs() {
+    for (int i = 0; i < eggs.size(); i++) {
+        eggs[i].Draw();
+    }
+}
+
 void Simulation::Update() {
     HandleInput();
+    UpdateWeones();
+    UpdateEggs();
+    CheckCollisions();
+}
+
+void Simulation::UpdateWeones() {
     for (int i = 0; i < weones.size(); i++) {
         weones[i].Update();
+        if(weones[i].readyToLayEgg) {
+            CreateEgg(weones[i]);
+            weones[i].LayEgg();
+        }
     }
-    CheckCollisions();
+}
+
+void Simulation::UpdateEggs() {
+    for (int i = 0; i < eggs.size(); i++) {
+        eggs[i].Update();
+        if(eggs[i].readyToHatch) {
+            HatchEgg(eggs[i]);
+            eggs.erase(eggs.begin() + i);
+        }
+    }
 }
 
 void Simulation::CreateWeones(int n) {
@@ -61,6 +87,23 @@ void Simulation::CreatePellets(int n) {
         Pellet newPellet = Pellet(x, y, energy);
         pellets.push_back(newPellet);
     }
+}
+
+void Simulation::CreateEgg(Weon parent) {
+    Egg newEgg = Egg(parent.position.x, parent.position.y, parent);
+    eggs.push_back(newEgg);
+}
+
+void Simulation::HatchEgg(Egg egg) {
+    Weon newWeon = Weon();
+    newWeon.position = egg.position;
+    newWeon.energy = 100;
+    newWeon.size = egg.parent.size;
+    newWeon.vel.x = 0;
+    newWeon.vel.y = 0;
+    newWeon.rotation = 0;
+    weones.push_back(newWeon);
+
 }
 
 void Simulation::HandleInput() {

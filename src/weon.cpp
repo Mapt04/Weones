@@ -37,6 +37,19 @@ void Weon::DrawShadow() {
 void Weon::Update() {
     position = Vector2Add(position, vel);
     vel = Vector2Add(vel, Vector2Scale(vel, -0.1));
+
+    // energy -= 0.1;
+
+    if(energy > 300) {
+        readyToLayEgg = true;
+    }
+    else {
+        readyToLayEgg = false;
+    }
+
+    if(energy <= 0) {
+        // Die();
+    }
 }
 
 void Weon::Rotate(float angle) {
@@ -76,4 +89,9 @@ void Weon::Resize(float newSize) {
     for (int i = 0; i < points.size(); i++) {
         points[i] = Vector2Scale(points[i], size);
     }
+}
+
+void Weon::LayEgg() {
+    energy -= 100;
+    readyToLayEgg = false;
 }

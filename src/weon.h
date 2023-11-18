@@ -17,6 +17,7 @@ class Weon {
         void Resize(float newSize);
         void BounceH();
         void BounceV();
+        void LayEgg();
         float rotation;
         Vector2 vel;
         std::vector<Vector2> points;
@@ -26,6 +27,7 @@ class Weon {
         NeuralNetwork brain;
         float size;
         float energy;
+        bool readyToLayEgg;
 
     private:
         void CheckBounds();
