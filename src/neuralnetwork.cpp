@@ -25,30 +25,27 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int hiddenLayers) {
 }
 
 std::vector<double> NeuralNetwork::ComputeOutput(const std::vector<double>& input) {
-
-    //Reset neurons
-    for (Layer layer: neuronLayers) {
-        for(Node node: layer) {
-            node.value = 0;
-        }
-    }
-
-    //Feed input
+    // Feed input
     for (int i = 0; i < neuronLayers[0].size(); i++) {
         neuronLayers[0][i].value = input[i];
     }
 
-    //Calculate Values
-    for (Connection connection: connections) {
-        if(connection.enabled) {
-            connection.outNode.value += 
-            connection.inNode.value * connection.weight;
+    // Calculate Values
+    for (int layerIndex = 1; layerIndex < neuronLayers.size(); layerIndex++) {
+        for (Node& node : neuronLayers[layerIndex]) {
+            node.value = 0; // Reset value
+            for (Connection& connection : connections) {
+                if (connection.enabled && connection.outNode.id == node.id) {
+                    node.value += connection.inNode.value * connection.weight;
+                }
+            }
+            node.value = ActivationFunction(node.value); // Apply activation function
         }
     }
 
-    //Output vector
+    // Output vector
     std::vector<double> outputs;
-    for(Node outputNode: neuronLayers[neuronLayers.size() - 1]) {
+    for (Node& outputNode : neuronLayers[neuronLayers.size() - 1]) {
         outputs.push_back(outputNode.value);
     }
     return outputs;
@@ -62,46 +59,52 @@ void NeuralNetwork::CreateNewNode() {
     neuronCount++;
 
     neuronLayers[layerIndex].push_back(newNode);
-    neuronCount++;
 }
 
 void NeuralNetwork::CreateNewConnection() {
+    if (neuronLayers.empty()) {
+        std::cout << "No layers in the network." << std::endl;
+        return;
+    }
 
-    Connection newConnection;
+    bool connectionExists;
     int inLayerIndex, outLayerIndex;
     int inNodeIndex, outNodeIndex;
     Node inNode, outNode;
-    bool connectionExists = true;
-    
-    while (connectionExists) {
-        inLayerIndex = rand() % (neuronLayers.size() - 1);
-        outLayerIndex = rand() % (neuronLayers.size() - (inNodeIndex + 1)) + (inNodeIndex + 1);
 
-        inNodeIndex = rand() % (neuronLayers[inLayerIndex].size() - 1);
-        outNodeIndex = rand() % (neuronLayers[outLayerIndex].size() - 1);
+    do {
+        inLayerIndex = rand() % (neuronLayers.size() - 1);
+        outLayerIndex = inLayerIndex + 1 + rand() % (neuronLayers.size() - inLayerIndex - 1);
+
+        // Check if layers are empty
+        if (neuronLayers[inLayerIndex].empty() || neuronLayers[outLayerIndex].empty()) {
+            continue;
+        }
+
+        inNodeIndex = rand() % neuronLayers[inLayerIndex].size();
+        outNodeIndex = rand() % neuronLayers[outLayerIndex].size();
 
         inNode = neuronLayers[inLayerIndex][inNodeIndex];
         outNode = neuronLayers[outLayerIndex][outNodeIndex];
 
+        // Check if connection already exists
         connectionExists = false;
-
-        for (Connection connection: connections) {
-            if(connection.inNode.id == inNode.id && connection.outNode.id == outNode.id) {
+        for (const auto& connection : connections) {
+            if (connection.inNode.id == inNode.id && connection.outNode.id == outNode.id) {
                 connectionExists = true;
                 break;
             }
         }
+
+    } while (neuronLayers[inLayerIndex].empty() || neuronLayers[outLayerIndex].empty() || connectionExists);
+
+    // Create new connection if it doesn't exist
+    if (!connectionExists) {
+        Connection newConnection;
+        newConnection.inNode = inNode;
+        newConnection.outNode = outNode;
+        connections.push_back(newConnection);
     }
-
-    newConnection.inNode = inNode;
-    newConnection.outNode = outNode;
-
-    std::uniform_real_distribution<double> unif(-1,1);
-    std::default_random_engine re;
-    newConnection.weight = unif(re);
-    newConnection.enabled = true;
-
-    connections.push_back(newConnection);
 }
 
 void NeuralNetwork::Display() {
@@ -117,4 +120,9 @@ void NeuralNetwork::Display() {
     for(Connection connection: connections) {
         std::cout << connection.inNode.id << " --- " << connection.outNode.id << std::endl;
     }
+}
+
+float NeuralNetwork::ActivationFunction(float x) {
+    if(x >= 0) return 1.0;
+    else return 0.0;
 }

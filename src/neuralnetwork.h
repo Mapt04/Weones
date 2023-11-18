@@ -24,6 +24,7 @@ public:
     void CreateNewNode();
     void CreateNewConnection();
     void Display();
+    float ActivationFunction(float x);
 
     std::vector<Layer> neuronLayers;
     std::vector<Connection> connections;
