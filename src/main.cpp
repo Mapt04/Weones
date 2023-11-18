@@ -31,6 +31,7 @@ int main() {
                 simulation.weones[i].Forward();
             }
         }
+        
         simulation.Update();
 
 

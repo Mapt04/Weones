@@ -5,7 +5,7 @@ Simulation::Simulation() {
     camera.zoom = 1.0f;
     simulationWidth = 15000;
     simulationHeight =  10000;
-    CreateWeones(70);
+    CreateWeones(50);
     CreatePellets(30);
 }
 
@@ -49,8 +49,6 @@ void Simulation::CreateWeones(int n) {
         newWeon.position.x = rand() % (int)simulationWidth - (int)simulationWidth/2;
         newWeon.position.y = rand() % (int)simulationHeight - (int)simulationHeight/2;
         newWeon.Rotate(unif(re));
-        newWeon.simulationWidth = simulationWidth;
-        newWeon.simulationHeight = simulationHeight;
         weones.push_back(newWeon);
     }
 }
@@ -79,7 +77,7 @@ void Simulation::HandleInput() {
         {
             camera.zoom += ((float)GetMouseWheelMove()*0.05f);
             if (camera.zoom > 2.0f) camera.zoom = 2.0f;
-            else if (camera.zoom < 0.1f) camera.zoom = 0.1f;
+            else if (camera.zoom < 0.08f) camera.zoom = 0.08f;
         }
 
         if (IsKeyPressed(KEY_R)) {
@@ -106,6 +104,9 @@ void Simulation::ClampCamera() {
 }
 
 void Simulation::CheckCollisions() {
+
+    // Weon-Pellet Collisions
+
     for (int i = 0; i < weones.size(); i++) {
         for (int j = 0; j < pellets.size(); j++) {
             bool colliding = false;
@@ -119,6 +120,20 @@ void Simulation::CheckCollisions() {
             if (colliding) {
                 weones[i].energy += pellets[j].energy;
                 pellets.erase(pellets.begin() + j);
+            }
+        }
+    }
+
+    // Weon-Border Collisions
+    for (int i = 0; i < weones.size(); i++) {
+        for(Vector2 vertex: weones[i].points) {
+            if (vertex.x + weones[i].position.x < -simulationWidth/2 || vertex.x + weones[i].position.x > simulationWidth/2) {
+                weones[i].BounceH();
+                break;
+            }
+
+            if(vertex.y + weones[i].position.y < -simulationHeight/2 || vertex.y + weones[i].position.y > simulationHeight/2) {
+                weones[i].BounceV();
             }
         }
     }
