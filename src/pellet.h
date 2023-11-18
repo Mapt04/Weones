@@ -10,4 +10,5 @@ class Pellet
 
     Pellet(int x, int y, float energy);
     void Draw();
+    bool ContainsPoint(Vector2 point);
 };

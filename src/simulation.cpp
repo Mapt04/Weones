@@ -25,6 +25,7 @@ void Simulation::Update() {
     for (int i = 0; i < weones.size(); i++) {
         weones[i].Update();
     }
+    CheckCollisions();
 }
 
 void Simulation::CreateWeones(int n) {
@@ -92,3 +93,21 @@ void Simulation::ClampCamera() {
     }
 }
 
+void Simulation::CheckCollisions() {
+    for (int i = 0; i < weones.size(); i++) {
+        for (int j = 0; j < pellets.size(); j++) {
+            bool colliding = false;
+            for(Vector2 vertex: weones[i].points) {
+                if (pellets[j].ContainsPoint(Vector2Add(vertex, weones[i].position))) {
+                    colliding = true;
+                    break;
+                }
+            }
+
+            if (colliding) {
+                weones[i].energy += pellets[j].energy;
+                pellets.erase(pellets.begin() + j);
+            }
+        }
+    }
+}

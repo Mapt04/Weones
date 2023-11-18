@@ -20,6 +20,7 @@ class Simulation {
     private:
         void HandleInput();
         void ClampCamera();
+        void CheckCollisions();
         float simulationWidth;
         float simulationHeight;
 };

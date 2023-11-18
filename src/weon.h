@@ -24,6 +24,7 @@ class Weon {
         float speed;
         NeuralNetwork brain;
         float size;
+        float energy;
 
     private:
         void CheckBounds();

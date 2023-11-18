@@ -11,3 +11,7 @@ void Pellet::Draw() {
     DrawCircle(position.x, position.y, size, DARKGREEN);
     DrawCircle(position.x, position.y, size * 0.7, LIME);
 }
+
+bool Pellet::ContainsPoint(Vector2 point) {
+    return CheckCollisionPointCircle(point, position, size);
+}

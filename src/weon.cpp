@@ -10,10 +10,10 @@ Weon::Weon() : brain(2, 5, 4){
         points[i] = Vector2Scale(points[i], size);
     }
     speed = 5.0f;
-    brain.CreateNewNode();
     vel.x = 0;
     vel.y = 0;
-    // brain.CreateNewConnection();
+    energy = 100;
+    brain.CreateNewConnection();
 }
 
 void Weon::Draw() {
@@ -85,7 +85,7 @@ void Weon::CheckBounds() {
 }
 
 void Weon::Resize(float newSize) {
-        for (int i = 0; i < points.size(); i++) {
-            points[i] = Vector2Scale(points[i], size);
-        }
+    for (int i = 0; i < points.size(); i++) {
+        points[i] = Vector2Scale(points[i], size);
     }
+}
