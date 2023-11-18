@@ -3,20 +3,32 @@
 Simulation::Simulation() {
     camera = {{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, {0, 0}};
     camera.zoom = 1.0f;
-    simulationWidth = 12000;
-    simulationHeight = 8000;
-    CreateWeones(100);
-    CreatePellets(100);
+    simulationWidth = 15000;
+    simulationHeight =  10000;
+    CreateWeones(70);
+    CreatePellets(30);
 }
 
 void Simulation::Draw() {
     DrawCircleGradient(0, 0, simulationWidth/2, {0, 255, 0, 10}, {0, 20, 13, 30});
     DrawRectangleLinesEx({-simulationWidth/2, -simulationHeight/2, simulationWidth, simulationHeight}, 10, WHITE);
-    for (int i = 0; i < pellets.size(); i++) {
-        pellets[i].Draw();
+    DrawPellets();
+    DrawWeones();
+}
+
+void Simulation::DrawWeones() {
+    for (int i = 0; i < weones.size(); i++) {
+        weones[i].DrawShadow();
     }
+
     for (int i = 0; i < weones.size(); i++) {
         weones[i].Draw();
+    }
+}
+
+void Simulation::DrawPellets() {
+    for (int i = 0; i < pellets.size(); i++) {
+        pellets[i].Draw();
     }
 }
 

@@ -10,6 +10,8 @@ class Simulation {
     public:
         Simulation();
         void Draw();
+        void DrawWeones();
+        void DrawPellets();
         void Update();
         void CreateWeones(int n);
         void CreatePellets(int n);
