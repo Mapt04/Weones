@@ -6,11 +6,15 @@ Simulation::Simulation() {
     simulationWidth = 12000;
     simulationHeight = 8000;
     CreateWeones(100);
+    CreatePellets(100);
 }
 
 void Simulation::Draw() {
     DrawCircleGradient(0, 0, simulationWidth/2, {0, 255, 0, 10}, {0, 20, 13, 30});
     DrawRectangleLinesEx({-simulationWidth/2, -simulationHeight/2, simulationWidth, simulationHeight}, 10, WHITE);
+    for (int i = 0; i < pellets.size(); i++) {
+        pellets[i].Draw();
+    }
     for (int i = 0; i < weones.size(); i++) {
         weones[i].Draw();
     }
@@ -35,6 +39,16 @@ void Simulation::CreateWeones(int n) {
         newWeon.simulationWidth = simulationWidth;
         newWeon.simulationHeight = simulationHeight;
         weones.push_back(newWeon);
+    }
+}
+
+void Simulation::CreatePellets(int n) {
+    for(int i = 0; i < n; i++) {
+        int x = rand() % (int)simulationWidth - (int)simulationWidth/2;
+        int y = rand() % (int)simulationHeight - (int)simulationHeight/2;
+        float energy = rand() % 100 + 50;
+        Pellet newPellet = Pellet(x, y, energy);
+        pellets.push_back(newPellet);
     }
 }
 
